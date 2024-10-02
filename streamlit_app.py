@@ -14,7 +14,7 @@ def extract_text_from_image(image):
         return f"Error occurred: {e}"
 
 # عنوان اصلی برنامه
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>سیستم تبدیل عکس به متن فارسی</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #4CAF50;'>سیستم خواندن متن های موجود در عکس</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>به سیستم راستینو خوش آمدید</h3>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>تصویر خود را بارگذاری کنید و متن آن را استخراج نمایید.</p>", unsafe_allow_html=True)
 
