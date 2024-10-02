@@ -1,22 +1,26 @@
 import streamlit as st
 import pytesseract
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image
 import re
 
-# تابع برای بهبود کیفیت تصویر
-def enhance_image(image):
-    # تبدیل تصویر به مقیاس خاکستری
-    image = image.convert('L')
-    # افزایش کنتراست تصویر
-    enhancer = ImageEnhance.Contrast(image)
-    image = enhancer.enhance(2)
-    return image
+# تابع برای اصلاح خطاهای متداول در لینک‌ها
+def correct_link(link):
+    # اصلاح خطاهای احتمالی در https و www
+    link = re.sub(r'(^ww\s?)', 'https://www.', link)  # اصلاح ww به www
+    link = re.sub(r'(^Ottps)', 'https', link)  # اصلاح Ottps به https
+    return link
+
+# تابع برای استخراج لینک‌ها از متن و اعمال اصلاحات
+def extract_links_from_text(text):
+    # الگوی منظم برای شناسایی لینک‌ها
+    links = re.findall(r'(https?://[^\s]+|ww[^\s]+)', text)
+    # اصلاح لینک‌ها
+    corrected_links = [correct_link(link) for link in links]
+    return corrected_links
 
 # تابع برای استخراج متن از تصویر
 def extract_text_from_image(image):
     try:
-        # پیش پردازش تصویر
-        image = enhance_image(image)
         # پیکربندی برای زبان فارسی و انگلیسی
         custom_config = r'-l eng+fas --psm 6'
         # استخراج متن از تصویر
@@ -24,12 +28,6 @@ def extract_text_from_image(image):
         return text
     except Exception as e:
         return f"Error occurred: {e}"
-
-# تابع برای استخراج لینک‌ها از متن
-def extract_links_from_text(text):
-    # استفاده از الگوی منظم برای شناسایی لینک‌ها
-    links = re.findall(r'(https?://[^\s]+)', text)
-    return links
 
 # عنوان اصلی برنامه
 st.markdown("<h1 style='text-align: center; color: #4CAF50;'>سیستم خواندن متن های موجود در عکس</h1>", unsafe_allow_html=True)
@@ -55,7 +53,7 @@ if uploaded_file is not None:
     # استخراج و نمایش لینک‌ها
     links = extract_links_from_text(text)
     if links:
-        st.success("لینک‌های استخراج شده:")
+        st.success("لینک‌های استخراج شده و اصلاح‌شده:")
         for link in links:
             st.write(link)
     else:
