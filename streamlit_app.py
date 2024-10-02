@@ -6,7 +6,7 @@ from PIL import Image
 def extract_text_from_image(image):
     try:
         # پیکربندی برای زبان فارسی
-        custom_config = r'-l fas --psm 6'
+        custom_config = r'-l eng+fas --psm 6'
         # استخراج متن از تصویر
         text = pytesseract.image_to_string(image, config=custom_config)
         return text
