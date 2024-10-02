@@ -1,24 +1,17 @@
 import streamlit as st
-import requests
+import pytesseract
 from PIL import Image
-import io
 
-# تابع برای ارسال تصویر به API و دریافت متن
+# تابع برای استخراج متن از تصویر
 def extract_text_from_image(image):
     try:
-        # تبدیل تصویر به بایت‌ها
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format='PNG')
-        img_byte_arr = img_byte_arr.getvalue()
+        # پیکربندی برای زبان فارسی
+        custom_config = r'-l fas --psm 6'
 
-        # ارسال درخواست به OCR.space
-        response = requests.post(
-            'https://api.ocr.space/parse/image',
-            files={'image': img_byte_arr},
-            data={'apikey': 'K84673681588957', 'language': 'fas'}
-        )
-        result = response.json()
-        return result.get('ParsedResults')[0].get('ParsedText', 'متنی یافت نشد.')
+        # استخراج متن از تصویر
+        text = pytesseract.image_to_string(image, config=custom_config)
+
+        return text
 
     except Exception as e:
         return f"Error occurred: {e}"
