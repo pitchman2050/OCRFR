@@ -17,7 +17,7 @@ def extract_text_from_image(image):
         return f"Error occurred: {e}"
 
 # عنوان برنامه در صفحه وب
-st.title("سیستم تشخیص متن فارسی (OCR)")
+st.title("سیستم تشخیص متن فارسیییییی (OCR)")
 
 # آپلود فایل تصویر
 uploaded_file = st.file_uploader("یک تصویر را آپلود کنید", type=["png", "jpg", "jpeg"])
