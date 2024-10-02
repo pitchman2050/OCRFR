@@ -1,17 +1,35 @@
 import streamlit as st
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter
+import re
+
+# تابع برای بهبود کیفیت تصویر
+def enhance_image(image):
+    # تبدیل تصویر به مقیاس خاکستری
+    image = image.convert('L')
+    # افزایش کنتراست تصویر
+    enhancer = ImageEnhance.Contrast(image)
+    image = enhancer.enhance(2)
+    return image
 
 # تابع برای استخراج متن از تصویر
 def extract_text_from_image(image):
     try:
-        # پیکربندی برای زبان فارسی
+        # پیش پردازش تصویر
+        image = enhance_image(image)
+        # پیکربندی برای زبان فارسی و انگلیسی
         custom_config = r'-l eng+fas --psm 6'
         # استخراج متن از تصویر
         text = pytesseract.image_to_string(image, config=custom_config)
         return text
     except Exception as e:
         return f"Error occurred: {e}"
+
+# تابع برای استخراج لینک‌ها از متن
+def extract_links_from_text(text):
+    # استفاده از الگوی منظم برای شناسایی لینک‌ها
+    links = re.findall(r'(https?://[^\s]+)', text)
+    return links
 
 # عنوان اصلی برنامه
 st.markdown("<h1 style='text-align: center; color: #4CAF50;'>سیستم خواندن متن های موجود در عکس</h1>", unsafe_allow_html=True)
@@ -33,6 +51,15 @@ if uploaded_file is not None:
     # نمایش متن استخراج شده
     st.success("متن استخراج شده:")
     st.text_area("نتیجه OCR", text, height=250)
+
+    # استخراج و نمایش لینک‌ها
+    links = extract_links_from_text(text)
+    if links:
+        st.success("لینک‌های استخراج شده:")
+        for link in links:
+            st.write(link)
+    else:
+        st.warning("لینکی یافت نشد.")
 
     # گزینه‌ای برای دانلود نتیجه به صورت فایل متنی
     st.markdown("<br>", unsafe_allow_html=True)  # افزودن فاصله عمودی
