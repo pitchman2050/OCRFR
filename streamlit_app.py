@@ -17,10 +17,10 @@ def extract_text_from_image(image):
         return f"Error occurred: {e}"
 
 # عنوان برنامه در صفحه وب
-st.title("سیستم تشخیص متن فارسیییییی (OCR)")
+st.title(" سیستم تبدیل عکس به متن فارسی راستینو خوش آمدید ")
 
 # آپلود فایل تصویر
-uploaded_file = st.file_uploader("یک تصویر را آپلود کنید", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("تصویر خود را بارگزاری کنید", type=["png", "jpg", "jpeg"])
 
 # اگر فایل آپلود شد
 if uploaded_file is not None:
