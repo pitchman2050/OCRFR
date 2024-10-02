@@ -1,27 +1,11 @@
 import streamlit as st
 import pytesseract
 from PIL import Image
-import re
-
-# تابع برای اصلاح خطاهای متداول در لینک‌ها
-def correct_link(link):
-    # اصلاح خطاهای احتمالی در https و www
-    link = re.sub(r'(^ww\s?)', 'https://www.', link)  # اصلاح ww به www
-    link = re.sub(r'(^Ottps)', 'https', link)  # اصلاح Ottps به https
-    return link
-
-# تابع برای استخراج لینک‌ها از متن و اعمال اصلاحات
-def extract_links_from_text(text):
-    # الگوی منظم برای شناسایی لینک‌ها
-    links = re.findall(r'(https?://[^\s]+|ww[^\s]+)', text)
-    # اصلاح لینک‌ها
-    corrected_links = [correct_link(link) for link in links]
-    return corrected_links
 
 # تابع برای استخراج متن از تصویر
 def extract_text_from_image(image):
     try:
-        # پیکربندی برای زبان فارسی و انگلیسی
+        # پیکربندی برای زبان فارسی
         custom_config = r'-l eng+fas --psm 6'
         # استخراج متن از تصویر
         text = pytesseract.image_to_string(image, config=custom_config)
@@ -49,15 +33,6 @@ if uploaded_file is not None:
     # نمایش متن استخراج شده
     st.success("متن استخراج شده:")
     st.text_area("نتیجه OCR", text, height=250)
-
-    # استخراج و نمایش لینک‌ها
-    links = extract_links_from_text(text)
-    if links:
-        st.success("لینک‌های استخراج شده و اصلاح‌شده:")
-        for link in links:
-            st.write(link)
-    else:
-        st.warning("لینکی یافت نشد.")
 
     # گزینه‌ای برای دانلود نتیجه به صورت فایل متنی
     st.markdown("<br>", unsafe_allow_html=True)  # افزودن فاصله عمودی
